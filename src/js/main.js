@@ -1,4 +1,3 @@
-
 "use strict"
 const TABLE_HEAD = ['#', 'base form', 'past simple', 'past participle']
 
@@ -40,17 +39,19 @@ const TRANSLATE = ["бити", "стати", "почати", "зігнути", "
     "красти", "палка", "жало", "сморід", "лаятись", "підмітати", "плавати", "гойдалка", "брати", "навчати", "сльоза",
     "розповідати", "думаю", "кинути", "зрозуміти", "розбудити", "знос", "виграти", "писати"]
 
-const TABLE_BUTTONS = ['learn', 'exam']
+const MAIN_TABLE_BUTTONS = ['learn', 'exam']
+const LEARN_BUTTONS = ['minor_test']
 
 let main_container = document.getElementsByClassName('container')[0]
 
 let table = createTable()
 
-drawTable(table)
+drawTable(table, MAIN_TABLE_BUTTONS)
 
 drawLearnProcess()
 
-function createTableHead(){
+
+function createTableHead() {
     let thead = document.createElement('thead')
     let tr = document.createElement('tr')
     thead.appendChild(tr)
@@ -68,7 +69,7 @@ function createTableBody(PositionsArr) {
     let tbody = document.createElement('tbody')
     if (PositionsArr === undefined) {
         for (let i = 0; i < BASE_FORM.length, i < PAST_SIMPLE.length, i < PAST_PARTICIPLE.length, i < TRANSLATE.length; i++) {
-            let html = '<th scope="row">' + (parseInt(i)+1) + '</th><td>' + BASE_FORM[i] + '<br>' + TRANSLATE[i] + '</td><td>' +
+            let html = '<th scope="row">' + (parseInt(i) + 1) + '</th><td>' + BASE_FORM[i] + '<br>' + TRANSLATE[i] + '</td><td>' +
                 PAST_SIMPLE[i] + '</td><td>' + PAST_PARTICIPLE[i] + '</td>'
             let tr = document.createElement('tr')
             tr.innerHTML = html
@@ -76,7 +77,7 @@ function createTableBody(PositionsArr) {
         }
     } else {
         for (let i = 0; i < PositionsArr.length; i++) {
-            let html = '<th scope="row">' + (parseInt(i)+1) + '</th><td>' + BASE_FORM[PositionsArr[i]] + '<br>' +
+            let html = '<th scope="row">' + (parseInt(i) + 1) + '</th><td>' + BASE_FORM[PositionsArr[i]] + '<br>' +
                 TRANSLATE[PositionsArr[i]] + '</td><td>' + PAST_SIMPLE[PositionsArr[i]] + '</td><td>' +
                 PAST_PARTICIPLE[PositionsArr[i]] + '</td>'
             let tr = document.createElement('tr')
@@ -90,10 +91,10 @@ function createTableBody(PositionsArr) {
     return tbody
 }
 
-function drawTable(table) {
+function drawTable(table, buttons_names) {
     main_container.innerHTML = ''
     main_container.appendChild(table)
-    let buttons = drawButtons(TABLE_BUTTONS)
+    let buttons = drawButtons(buttons_names)
     for (let i = 0; i < buttons.length; i++) {
         main_container.appendChild(buttons[i])
     }
@@ -101,10 +102,17 @@ function drawTable(table) {
 
 function drawButtons(listButtonsName) {
     let tableButtonsArr = []
-    for (let i = 0; i < listButtonsName.length; i++) {
+    if(Array.isArray(listButtonsName)) {
+        for (let i = 0; i < listButtonsName.length; i++) {
+            let button = document.createElement('div')
+            button.innerText = listButtonsName[i]
+            button.classList.add(listButtonsName[i], 'btn', "btn-primary", "mx-2")
+            tableButtonsArr.push(button)
+        }
+    } else {
         let button = document.createElement('div')
-        button.innerText = listButtonsName[i]
-        button.classList.add(listButtonsName[i], 'btn', "btn-primary", "mx-2")
+        button.innerText = listButtonsName
+        button.classList.add(listButtonsName.trim(), 'btn', "btn-primary", "mx-2")
         tableButtonsArr.push(button)
     }
     return tableButtonsArr
@@ -113,7 +121,7 @@ function drawButtons(listButtonsName) {
 function makeWordPositionsList(wordsArr) {
     let maxLength = wordsArr.length
     let positionsArr = []
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 5; i++) {
         positionsArr.push(Math.floor(Math.random() * maxLength))
     }
     return positionsArr
@@ -138,11 +146,9 @@ function drawLearnProcess() {
             let container = document.getElementsByClassName('container')[0]
             container.innerHTML = ''
             let verb_positions = makeWordPositionsList(BASE_FORM)
-            console.log(verb_positions)
             createTableBody(verb_positions)
-
             let table = createTable(verb_positions)
-            drawTable(table)
+            drawTable(table, LEARN_BUTTONS)
         })
     } catch (err) {
         console.log('error in function drawLearnProcess')
@@ -150,7 +156,7 @@ function drawLearnProcess() {
 }
 
 
-function createTable(wordsPositions){
+function createTable(wordsPositions) {
     let table = document.createElement('table')
     table.classList.add('table')
     let thead = createTableHead()
