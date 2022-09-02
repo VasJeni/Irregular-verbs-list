@@ -1,6 +1,6 @@
 "use strict"
+const WORDS_IN_PART = 5
 const TABLE_HEAD = ['#', 'base form', 'past simple', 'past participle']
-
 const BASE_FORM = ["beat", "become", "begin", "bend", "bet", "bite", "bleed", "blow", "break", "breed", "bring",
     "build", "burn", "buy", "catch", "choose", "come", "cost", "cut", "do", "dig", "draw", "dream", "drink", "drive",
     "eat", "fall", "feed", "feel", "fight", "find", "fly", "forget", "forgive", "freeze", "get", "give", "go", "grow",
@@ -18,7 +18,6 @@ const PAST_SIMPLE = ["beat", "became", "began", "bent", "bet", "bit", "bled", "b
     "shook", "shone", "shod", "shot", "showed", "shrank", "shut", "sang", "sank", "sat", "slept", "spoke", "spent", "spilt/spilled",
     "spread", "sped", "stood", "stole", "stuck", "stung", "stank", "swore", "swept", "swam", "swung", "took", "taught", "tore",
     "told", "thought", "threw", "understood", "woke", "wore", "won", "wrote"]
-
 const PAST_PARTICIPLE = ["beaten", "become", "begun", "bent", "bet", "bitten", "bled", "blown", "broken", "bred", "brought",
     "built", "burnt/burned", "bought", "caught", "chosen", "come", "cost", "cut", "done", "dug", "drawn", "dreamt/dreamed",
     "drunk", "driven", "eaten", "fallen", "fed", "felt", "fought", "found", "flown", "forgotten", "forgiven", "frozen", "got",
@@ -27,7 +26,6 @@ const PAST_PARTICIPLE = ["beaten", "become", "begun", "bent", "bet", "bitten", "
     "seen", "sold", "sent", "set", "shaken", "shone", "shod", "shot", "shown", "shrunk", "shut", "sung", "sunk", "sat", "slept",
     "spoken", "spent", "spilt/spilled", "spread", "sped", "stood", "stolen", "stuck", "stung", "stunk", "sworn", "swept", "swum",
     "swung", "taken", "taught", "torn", "told", "thought", "thrown", "understood", "woken", "worn", "won", "written"]
-
 const TRANSLATE = ["бити", "стати", "почати", "зігнути", "ставка", "укус", "кровоточити", "удар", "перерву", "порода",
     "принести", "будувати", "спалювати", "купити", "виловити", "вибрати", "прийти", "вартість", "вирізати", "робити", "копати",
     "малювати", "сон", "пити", "диск", "їсти", "падіння", "годувати", "відчувати", "боротися", "знайти", "літати", "забути",
@@ -38,17 +36,43 @@ const TRANSLATE = ["бити", "стати", "почати", "зігнути", "
     "закрити", "співати", "раковина", "сидіти", "сон", "говорити", "витрачати", "розлив", "поширення", "швидкість", "стояти",
     "красти", "палка", "жало", "сморід", "лаятись", "підмітати", "плавати", "гойдалка", "брати", "навчати", "сльоза",
     "розповідати", "думаю", "кинути", "зрозуміти", "розбудити", "знос", "виграти", "писати"]
-
+const DICTIONARY_LIST = [TRANSLATE, BASE_FORM, PAST_SIMPLE, PAST_PARTICIPLE]
 const MAIN_TABLE_BUTTONS = ['learn', 'exam']
 const LEARN_BUTTONS = ['minor_test']
+const NAMES_BUTTONS = ['learn', 'exam', 'test']
 
 let main_container = document.getElementsByClassName('container')[0]
 
 let table = createTable()
 
-drawTable(table, MAIN_TABLE_BUTTONS)
 
-drawLearnProcess()
+document.addEventListener('DOMContentLoaded', () => {
+    drawTable(table, MAIN_TABLE_BUTTONS[0])
+    drawLearnProcess()
+    findButtons()
+})
+
+function createButtons(NAMES_BUTTONS) {
+    let buttonsList = []
+    for (let i = 0; i < 3; i++) {
+        let button = document.createElement('div')
+        button.classList.add('btn', "btn-primary", "mx-2", NAMES_BUTTONS[i])
+        buttonsList.push(button)
+    }
+    buttonsList.forEach((elem) => {
+        if (elem.classList.contains('test')) {
+            elem.addEventListener('click', () => {
+                drawTest()
+            })
+        } else if (elem.classList.contains('learn')) {
+            elem.addEventListener('click', () => {
+                    drawTest()
+                }
+            )
+        }
+    })
+    return buttonsList
+}
 
 
 function createTableHead() {
@@ -84,44 +108,41 @@ function createTableBody(PositionsArr) {
             tr.innerHTML = html
             tbody.appendChild(tr)
         }
-        console.log("I'm a createTableBody function else")
-        console.log(tbody)
-        console.log("I'm a createTableBody function else")
     }
     return tbody
 }
 
-function drawTable(table, buttons_names) {
+function drawTable(table, button) {
     main_container.innerHTML = ''
     main_container.appendChild(table)
-    let buttons = drawButtons(buttons_names)
+    let buttons = drawButtons(button)
     for (let i = 0; i < buttons.length; i++) {
-        main_container.appendChild(buttons[i])
+        main_container.appendChild(button)
     }
 }
 
 function drawButtons(listButtonsName) {
-    let tableButtonsArr = []
-    if(Array.isArray(listButtonsName)) {
+    let buttonsArr = []
+    if (Array.isArray(listButtonsName)) {
         for (let i = 0; i < listButtonsName.length; i++) {
             let button = document.createElement('div')
             button.innerText = listButtonsName[i]
             button.classList.add(listButtonsName[i], 'btn', "btn-primary", "mx-2")
-            tableButtonsArr.push(button)
+            buttonsArr.push(button)
         }
     } else {
         let button = document.createElement('div')
         button.innerText = listButtonsName
         button.classList.add(listButtonsName.trim(), 'btn', "btn-primary", "mx-2")
-        tableButtonsArr.push(button)
+        buttonsArr.push(button)
     }
-    return tableButtonsArr
+    return buttonsArr
 }
 
 function makeWordPositionsList(wordsArr) {
     let maxLength = wordsArr.length
     let positionsArr = []
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < WORDS_IN_PART; i++) {
         positionsArr.push(Math.floor(Math.random() * maxLength))
     }
     return positionsArr
@@ -155,7 +176,6 @@ function drawLearnProcess() {
     }
 }
 
-
 function createTable(wordsPositions) {
     let table = document.createElement('table')
     table.classList.add('table')
@@ -163,6 +183,65 @@ function createTable(wordsPositions) {
     let tbody = createTableBody(wordsPositions)
     table.appendChild(thead)
     table.appendChild(tbody)
-
     return table
 }
+
+function createMinorExam(verbList) {
+    let listLength = verbList.length
+    let form = document.createElement('form')
+
+    for (let i = 0; i < WORDS_IN_PART; i++) {
+
+        let row = document.createElement('div')
+        row.classList.add('row')
+
+        for (let j = 0; j < DICTIONARY_LIST.length; j++) {
+
+            let col = document.createElement('div')
+            col.classList.add('col-6', 'col-lg-3')
+            let input = document.createElement('input')
+            input.classList.add('form-control')
+            if (j < 1) {
+                input.setAttribute('value', TRANSLATE[i])
+                input.setAttribute('disabled', '')
+            }
+            col.appendChild(input)
+            row.appendChild(col)
+        }
+    }
+    return form
+}
+
+/*
+function drawMinorTest(){
+    let content = document.getElementsByClassName('section')[0]
+    try {
+        console.log("I'm try constraction in function drawMinorTest")
+        let drawButtons = document.getElementsByClassName('minor_test')
+        console.log("I'm try constraction in function drawMinorTest")
+        drawButtons[0].addEventListener('click', ()=> {
+            content.innerHTML = ''
+            let minor_exam = createMinorExam()
+            content.innerHTML = minor_exam
+            console.log(1)
+            console.log("I'm try constraction in function drawMinorTest")
+        })
+    }
+    catch (err) {
+        console.log('I caught error in function drawMinorTest')
+    }
+}*/
+
+function findButtons() {
+    let buttons = [...document.getElementsByClassName('btn')]
+    buttons.forEach((btn) => {
+        console.log(btn)
+    })
+}
+
+//need update
+function drawTest() {
+    console.log(1)
+}
+
+console.log(createButtons(NAMES_BUTTONS))
