@@ -40,6 +40,7 @@ const DICTIONARY_LIST = [TRANSLATE, BASE_FORM, PAST_SIMPLE, PAST_PARTICIPLE]
 const MAIN_TABLE_BUTTONS = ['learn', 'exam']
 const LEARN_BUTTONS = ['minor_test']
 const NAMES_BUTTONS = ['learn', 'exam', 'test']
+const BUTTONS = createButtons(NAMES_BUTTONS)
 
 let main_container = document.getElementsByClassName('container')[0]
 
@@ -47,9 +48,9 @@ let table = createTable()
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    drawTable(table, MAIN_TABLE_BUTTONS[0])
-    drawLearnProcess()
-    findButtons()
+    drawTable(table, BUTTONS[0])
+    main_container.appendChild(createForm(1))
+
 })
 
 function createButtons(NAMES_BUTTONS) {
@@ -61,17 +62,39 @@ function createButtons(NAMES_BUTTONS) {
     }
     buttonsList.forEach((elem) => {
         if (elem.classList.contains('test')) {
+            elem.innerText = 'test'
             elem.addEventListener('click', () => {
-                drawTest()
+                drawTest('test click')
             })
         } else if (elem.classList.contains('learn')) {
+            elem.innerText = 'learn'
             elem.addEventListener('click', () => {
-                    drawTest()
+                    drawTest('learn click')
+                    let container = document.getElementsByClassName('container')[0]
+                    container.innerHTML = ''
+                    let verb_positions = makeWordPositionsList(BASE_FORM)
+                    createTableBody(verb_positions)
+                    let table = createTable(verb_positions)
+                    drawTable(table, BUTTONS[2])
                 }
             )
         }
     })
     return buttonsList
+}
+
+function createForm (wordsPositions) {
+    let form = document.createElement('form')
+    let row = document.createElement('div')
+    row.classList.add('form-row')
+    let formGroup = document.createElement('div')
+    formGroup.classList.add('form-group', 'col-md-6')
+    let input = document.createElement('input')
+    input.setAttribute('type', 'text')
+
+    form.appendChild(row.appendChild(formGroup.appendChild(input)))
+    console.log('create form')
+    return form
 }
 
 
@@ -115,10 +138,7 @@ function createTableBody(PositionsArr) {
 function drawTable(table, button) {
     main_container.innerHTML = ''
     main_container.appendChild(table)
-    let buttons = drawButtons(button)
-    for (let i = 0; i < buttons.length; i++) {
-        main_container.appendChild(button)
-    }
+    main_container.appendChild(button)
 }
 
 function drawButtons(listButtonsName) {
@@ -160,7 +180,7 @@ function takeWordsByPosition(verbArr, positionsArr) {
     return wordsArr
 }
 
-function drawLearnProcess() {
+/*function drawLearnProcess() {
     try {
         let learnButton = document.getElementsByClassName('learn')[0]
         learnButton.addEventListener('click', () => {
@@ -174,7 +194,7 @@ function drawLearnProcess() {
     } catch (err) {
         console.log('error in function drawLearnProcess')
     }
-}
+}*/
 
 function createTable(wordsPositions) {
     let table = document.createElement('table')
@@ -240,8 +260,8 @@ function findButtons() {
 }
 
 //need update
-function drawTest() {
-    console.log(1)
+function drawTest(value) {
+    console.log(value)
 }
 
 console.log(createButtons(NAMES_BUTTONS))
