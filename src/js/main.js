@@ -95,10 +95,11 @@ function createButtons(NAMES_BUTTONS) {
 
 function createForm(wordsPositions = []) {
     let form = document.createElement('form')
-    let formRow = document.createElement('div')
-    formRow.classList.add('form-row')
+
     let boxList = []
     for (let k = 0; k < wordsPositions.length; k++) {
+        let formRow = document.createElement('div')
+        formRow.classList.add('form-row','form-group')
         for (let i = 0; i < DICTIONARY_LIST.length; i++) {
             let col = document.createElement('div')
             col.classList.add('col-6')
@@ -122,8 +123,8 @@ function createForm(wordsPositions = []) {
             col.appendChild(input)
             formRow.appendChild(col)
         }
+        form.appendChild(formRow)
     }
-    form.appendChild(formRow)
     return form
 }
 
