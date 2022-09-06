@@ -1,5 +1,5 @@
 "use strict"
-const WORDS_IN_PART = 5
+const WORDS_IN_PART = 3
 const TABLE_HEAD = ['#', 'base form', 'past simple', 'past participle']
 const BASE_FORM = ["beat", "become", "begin", "bend", "bet", "bite", "bleed", "blow", "break", "breed", "bring",
     "build", "burn", "buy", "catch", "choose", "come", "cost", "cut", "do", "dig", "draw", "dream", "drink", "drive",
@@ -39,13 +39,15 @@ const TRANSLATE = ["бити", "стати", "почати", "зігнути", "
 const DICTIONARY_LIST = [TRANSLATE, BASE_FORM, PAST_SIMPLE, PAST_PARTICIPLE]
 const MAIN_TABLE_BUTTONS = ['learn', 'exam']
 const LEARN_BUTTONS = ['minor_test']
-const NAMES_BUTTONS = ['learn', 'exam', 'test']
+const NAMES_BUTTONS = ['learn', 'exam', 'test', 'check']
 const BUTTONS = createButtons(NAMES_BUTTONS)
 
 let main_container = document.getElementsByClassName('container')[0]
 
 let table = createTable()
+let verb_positions = []
 
+console.log(Object.keys(Object.keys(DICTIONARY_LIST)[0]))
 
 document.addEventListener('DOMContentLoaded', () => {
     drawTable(table, BUTTONS[0])
@@ -65,6 +67,10 @@ function createButtons(NAMES_BUTTONS) {
             elem.innerText = 'test'
             elem.addEventListener('click', () => {
                 drawTest('test click')
+                console.log(verb_positions)
+                main_container.innerHTML = ''
+                let form = createForm(verb_positions)
+                main_container.appendChild(form)
             })
         } else if (elem.classList.contains('learn')) {
             elem.innerText = 'learn'
@@ -72,28 +78,52 @@ function createButtons(NAMES_BUTTONS) {
                     drawTest('learn click')
                     let container = document.getElementsByClassName('container')[0]
                     container.innerHTML = ''
-                    let verb_positions = makeWordPositionsList(BASE_FORM)
+                    verb_positions = makeWordPositionsList(BASE_FORM)
                     createTableBody(verb_positions)
                     let table = createTable(verb_positions)
                     drawTable(table, BUTTONS[2])
                 }
             )
+        } else if (elem.classList.contains('check')) {
+            this.innerText = 'check'
+            console.log('create')
+            console.log(this)
         }
     })
     return buttonsList
 }
 
-function createForm (wordsPositions) {
+function createForm(wordsPositions = []) {
     let form = document.createElement('form')
-    let row = document.createElement('div')
-    row.classList.add('form-row')
-    let formGroup = document.createElement('div')
-    formGroup.classList.add('form-group', 'col-md-6')
-    let input = document.createElement('input')
-    input.setAttribute('type', 'text')
-
-    form.appendChild(row.appendChild(formGroup.appendChild(input)))
-    console.log('create form')
+    let formRow = document.createElement('div')
+    formRow.classList.add('form-row')
+    let boxList = []
+    for (let k = 0; k < wordsPositions.length; k++) {
+        for (let i = 0; i < DICTIONARY_LIST.length; i++) {
+            let col = document.createElement('div')
+            col.classList.add('col-6')
+            let input = document.createElement('input')
+            input.setAttribute('type', 'text')
+            input.classList.add('form-control')
+            if (i < 1) {
+                input.setAttribute('readonly', "")
+                input.setAttribute('value', DICTIONARY_LIST[i][wordsPositions[k]])
+            }
+            if (i === 1) {
+                input.setAttribute('placeholder', 'Base form')
+            }
+            if (i === 2) {
+                input.setAttribute('placeholder', 'past simple')
+            }
+            if (i === 3) {
+                input.setAttribute('placeholder', 'past participle')
+            }
+            input.setAttribute('id', String(wordsPositions[k]) + String(i))
+            col.appendChild(input)
+            formRow.appendChild(col)
+        }
+    }
+    form.appendChild(formRow)
     return form
 }
 
@@ -161,11 +191,11 @@ function drawButtons(listButtonsName) {
 
 function makeWordPositionsList(wordsArr) {
     let maxLength = wordsArr.length
-    let positionsArr = []
+    let positions = []
     for (let i = 0; i < WORDS_IN_PART; i++) {
-        positionsArr.push(Math.floor(Math.random() * maxLength))
+        positions.push(Math.floor(Math.random() * maxLength))
     }
-    return positionsArr
+    return positions
 }
 
 function takeWordsByPosition(verbArr, positionsArr) {
@@ -179,22 +209,6 @@ function takeWordsByPosition(verbArr, positionsArr) {
     }
     return wordsArr
 }
-
-/*function drawLearnProcess() {
-    try {
-        let learnButton = document.getElementsByClassName('learn')[0]
-        learnButton.addEventListener('click', () => {
-            let container = document.getElementsByClassName('container')[0]
-            container.innerHTML = ''
-            let verb_positions = makeWordPositionsList(BASE_FORM)
-            createTableBody(verb_positions)
-            let table = createTable(verb_positions)
-            drawTable(table, LEARN_BUTTONS)
-        })
-    } catch (err) {
-        console.log('error in function drawLearnProcess')
-    }
-}*/
 
 function createTable(wordsPositions) {
     let table = document.createElement('table')
@@ -232,30 +246,10 @@ function createMinorExam(verbList) {
     return form
 }
 
-/*
-function drawMinorTest(){
-    let content = document.getElementsByClassName('section')[0]
-    try {
-        console.log("I'm try constraction in function drawMinorTest")
-        let drawButtons = document.getElementsByClassName('minor_test')
-        console.log("I'm try constraction in function drawMinorTest")
-        drawButtons[0].addEventListener('click', ()=> {
-            content.innerHTML = ''
-            let minor_exam = createMinorExam()
-            content.innerHTML = minor_exam
-            console.log(1)
-            console.log("I'm try constraction in function drawMinorTest")
-        })
-    }
-    catch (err) {
-        console.log('I caught error in function drawMinorTest')
-    }
-}*/
 
 function findButtons() {
     let buttons = [...document.getElementsByClassName('btn')]
     buttons.forEach((btn) => {
-        console.log(btn)
     })
 }
 
@@ -264,4 +258,3 @@ function drawTest(value) {
     console.log(value)
 }
 
-console.log(createButtons(NAMES_BUTTONS))
