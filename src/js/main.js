@@ -1,5 +1,5 @@
 "use strict"
-const WORDS_IN_PART = 3
+const WORDS_IN_PART = 1
 const TABLE_HEAD = ['#', 'base form', 'past simple', 'past participle']
 const BASE_FORM = ["beat", "become", "begin", "bend", "bet", "bite", "bleed", "blow", "break", "breed", "bring",
     "build", "burn", "buy", "catch", "choose", "come", "cost", "cut", "do", "dig", "draw", "dream", "drink", "drive",
@@ -47,7 +47,6 @@ let main_container = document.getElementsByClassName('container')[0]
 let table = createTable()
 let verb_positions = []
 
-console.log(Object.keys(Object.keys(DICTIONARY_LIST)[0]))
 
 document.addEventListener('DOMContentLoaded', () => {
     drawTable(table, BUTTONS[0])
@@ -57,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function createButtons(NAMES_BUTTONS) {
     let buttonsList = []
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < NAMES_BUTTONS.length; i++) {
         let button = document.createElement('div')
         button.classList.add('btn', "btn-primary", "mx-2", NAMES_BUTTONS[i])
         buttonsList.push(button)
@@ -67,10 +66,11 @@ function createButtons(NAMES_BUTTONS) {
             elem.innerText = 'test'
             elem.addEventListener('click', () => {
                 drawTest('test click')
-                console.log(verb_positions)
+                //console.log(verb_positions)
                 main_container.innerHTML = ''
                 let form = createForm(verb_positions)
                 main_container.appendChild(form)
+                main_container.appendChild(BUTTONS[3])
             })
         } else if (elem.classList.contains('learn')) {
             elem.innerText = 'learn'
@@ -85,9 +85,13 @@ function createButtons(NAMES_BUTTONS) {
                 }
             )
         } else if (elem.classList.contains('check')) {
-            this.innerText = 'check'
-            console.log('create')
-            console.log(this)
+            elem.innerText = 'check'
+            elem.addEventListener('click', ()=> {
+                let data = document.querySelectorAll('input')
+               data.forEach((input)=> {
+                   console.log(input.value)})
+            })
+
         }
     })
     return buttonsList
@@ -124,6 +128,7 @@ function createForm(wordsPositions = []) {
             formRow.appendChild(col)
         }
         form.appendChild(formRow)
+        main_container.appendChild(BUTTONS[3])
     }
     return form
 }
