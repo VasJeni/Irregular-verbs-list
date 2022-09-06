@@ -27,7 +27,7 @@ const PAST_PARTICIPLE = ["beaten", "become", "begun", "bent", "bet", "bitten", "
     "spoken", "spent", "spilt/spilled", "spread", "sped", "stood", "stolen", "stuck", "stung", "stunk", "sworn", "swept", "swum",
     "swung", "taken", "taught", "torn", "told", "thought", "thrown", "understood", "woken", "worn", "won", "written"]
 const TRANSLATE = ["бити", "стати", "почати", "зігнути", "ставка", "укус", "кровоточити", "удар", "перерву", "порода",
-    "принести", "будувати", "спалювати", "купити", "виловити", "вибрати", "прийти", "вартість", "вирізати", "робити", "копати",
+    "принести", "будувати", "спалювати", "купити", "зловити/упіймати", "вибрати", "прийти", "вартість", "вирізати", "робити", "копати",
     "малювати", "сон", "пити", "диск", "їсти", "падіння", "годувати", "відчувати", "боротися", "знайти", "літати", "забути",
     "пробачити", "замерзнути", "отримати", "дати", "йти", "рости", "мати", "чути", "приховати", "удар", "утримувати", "боляче",
     "зберегти", "знати", "лежати", "вести", "худий", "залишати", "позичати", "дозволяє", "втрачати", "зробити", "означає",
@@ -70,6 +70,7 @@ function createButtons(NAMES_BUTTONS) {
                 let form = createForm(verb_positions)
                 main_container.appendChild(form)
                 main_container.appendChild(BUTTONS[3])
+                main_container.appendChild(BUTTONS[0])
             })
         } else if (elem.classList.contains('learn')) {
             elem.innerText = 'learn'
@@ -88,21 +89,26 @@ function createButtons(NAMES_BUTTONS) {
             elem.addEventListener('click', () => {
                 let data = document.querySelectorAll('input')
                 data.forEach((input) => {
-                    console.log(input.value)
                     let counter = input.getAttribute('id')
                     let counterForm = counter.charAt(counter.length - 1)
-                    let counterWord = counter.slice(0, counter.length -1)
-                    //console.log(`counter of word form = ${counterForm}`)
-                    //console.log(`counter of word = ${counterWord}`)
-                    //console.log(`counter = ${counter}`)
-                    if (input.value.trim() !== DICTIONARY_LIST[counterForm][counterWord]){
-                        console.log(`input value ${input.value} is incorect, correct is ${DICTIONARY_LIST[counterForm][counterWord]}`)
+                    let counterWord = counter.slice(0, counter.length - 1)
+                    if (input.value.trim() !== DICTIONARY_LIST[counterForm][counterWord]) {
+                        if (!input.classList.contains('incorrect')) {
+                            input.classList.add('incorrect')
+                            input.setAttribute('placeholder', `${input.value.trim()} is incorrect, correct value = ${DICTIONARY_LIST[counterForm][counterWord]}`)
+                            input.value = ''
+                        }
                     } else {
-                        console.log(`correct`)
+                        if (input.classList.contains('incorrect')) {
+                            input.classList.remove('incorrect')
+                            input.setAttribute('disabled', "")
+                        }
+                        if (!input.classList.contains('bg-success')) {
+                            input.classList.add('bg-success')
+                        }
                     }
                 })
             })
-
         }
     })
     return buttonsList
@@ -122,7 +128,7 @@ function createForm(wordsPositions = []) {
             input.setAttribute('type', 'text')
             input.classList.add('form-control')
             if (i < 1) {
-                input.setAttribute('readonly', "")
+                input.setAttribute('disabled', "")
                 input.setAttribute('value', DICTIONARY_LIST[i][wordsPositions[k]])
             }
             if (i === 1) {
