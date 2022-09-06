@@ -1,5 +1,5 @@
 "use strict"
-const WORDS_IN_PART = 1
+const WORDS_IN_PART = 2
 const TABLE_HEAD = ['#', 'base form', 'past simple', 'past participle']
 const BASE_FORM = ["beat", "become", "begin", "bend", "bet", "bite", "bleed", "blow", "break", "breed", "bring",
     "build", "burn", "buy", "catch", "choose", "come", "cost", "cut", "do", "dig", "draw", "dream", "drink", "drive",
@@ -51,7 +51,6 @@ let verb_positions = []
 document.addEventListener('DOMContentLoaded', () => {
     drawTable(table, BUTTONS[0])
     main_container.appendChild(createForm(1))
-
 })
 
 function createButtons(NAMES_BUTTONS) {
@@ -65,7 +64,7 @@ function createButtons(NAMES_BUTTONS) {
         if (elem.classList.contains('test')) {
             elem.innerText = 'test'
             elem.addEventListener('click', () => {
-                drawTest('test click')
+                //drawTest('test click')
                 //console.log(verb_positions)
                 main_container.innerHTML = ''
                 let form = createForm(verb_positions)
@@ -75,7 +74,7 @@ function createButtons(NAMES_BUTTONS) {
         } else if (elem.classList.contains('learn')) {
             elem.innerText = 'learn'
             elem.addEventListener('click', () => {
-                    drawTest('learn click')
+                    //drawTest('learn click')
                     let container = document.getElementsByClassName('container')[0]
                     container.innerHTML = ''
                     verb_positions = makeWordPositionsList(BASE_FORM)
@@ -86,10 +85,22 @@ function createButtons(NAMES_BUTTONS) {
             )
         } else if (elem.classList.contains('check')) {
             elem.innerText = 'check'
-            elem.addEventListener('click', ()=> {
+            elem.addEventListener('click', () => {
                 let data = document.querySelectorAll('input')
-               data.forEach((input)=> {
-                   console.log(input.value)})
+                data.forEach((input) => {
+                    console.log(input.value)
+                    let counter = input.getAttribute('id')
+                    let counterForm = counter.charAt(counter.length - 1)
+                    let counterWord = counter.slice(0, counter.length -1)
+                    //console.log(`counter of word form = ${counterForm}`)
+                    //console.log(`counter of word = ${counterWord}`)
+                    //console.log(`counter = ${counter}`)
+                    if (input.value.trim() !== DICTIONARY_LIST[counterForm][counterWord]){
+                        console.log(`input value ${input.value} is incorect, correct is ${DICTIONARY_LIST[counterForm][counterWord]}`)
+                    } else {
+                        console.log(`correct`)
+                    }
+                })
             })
 
         }
@@ -103,7 +114,7 @@ function createForm(wordsPositions = []) {
     let boxList = []
     for (let k = 0; k < wordsPositions.length; k++) {
         let formRow = document.createElement('div')
-        formRow.classList.add('form-row','form-group')
+        formRow.classList.add('form-row', 'form-group')
         for (let i = 0; i < DICTIONARY_LIST.length; i++) {
             let col = document.createElement('div')
             col.classList.add('col-6')
