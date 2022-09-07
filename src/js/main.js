@@ -34,7 +34,7 @@ const TRANSLATE = ["бити", "стати", "почати", "зігнути", "
     "зустріти", "платити", "поставити", "кинути", "прочитати", "їздити", "кільце", "підніматися", "бігати", "сказати",
     "побачити", "продавати", "відправити", "встановити", "струсити", "блиск", "взуття", "стріляти", "показувати", "скорочуватися",
     "закрити", "співати", "раковина", "сидіти", "сон", "говорити", "витрачати", "розлив", "поширення", "швидкість", "стояти",
-    "красти", "палка", "жало", "сморід", "лаятись", "підмітати", "плавати", "гойдалка", "брати", "навчати", "сльоза",
+    "красти", "палка", "жало", "сморід", "лаятись", "підмітати", "плавати", "гойдалка", "брати", "навчати", "рвати",
     "розповідати", "думаю", "кинути", "зрозуміти", "розбудити", "знос", "виграти", "писати"]
 const DICTIONARY_LIST = [TRANSLATE, BASE_FORM, PAST_SIMPLE, PAST_PARTICIPLE]
 const MAIN_TABLE_BUTTONS = ['learn', 'exam']
@@ -87,6 +87,7 @@ function createButtons(NAMES_BUTTONS) {
         } else if (elem.classList.contains('check')) {
             elem.innerText = 'check'
             elem.addEventListener('click', () => {
+                let pass = false
                 let data = document.querySelectorAll('input')
                 data.forEach((input) => {
                     let counter = input.getAttribute('id')
@@ -107,7 +108,22 @@ function createButtons(NAMES_BUTTONS) {
                             input.classList.add('bg-success')
                         }
                     }
+
                 })
+                data.forEach((elem)=> {
+                    if (elem.classList.contains('incorrect')) {
+                        console.log('incorect')
+                        pass = false
+                        return;
+                    } else {
+                        pass = true
+                    }
+                })
+                if (pass) {
+                    alert('Great, get nex one')
+                } else {
+                    alert('Wrong, write correct answers!')
+                }
             })
         }
     })
@@ -116,8 +132,6 @@ function createButtons(NAMES_BUTTONS) {
 
 function createForm(wordsPositions = []) {
     let form = document.createElement('form')
-
-    let boxList = []
     for (let k = 0; k < wordsPositions.length; k++) {
         let formRow = document.createElement('div')
         formRow.classList.add('form-row', 'form-group')
@@ -155,7 +169,6 @@ function createTableHead() {
     let thead = document.createElement('thead')
     let tr = document.createElement('tr')
     thead.appendChild(tr)
-
     for (let i = 0; i < TABLE_HEAD.length; i++) {
         let th_scope_col = document.createElement('th')
         th_scope_col.setAttribute('scope', 'col')
@@ -246,14 +259,10 @@ function createTable(wordsPositions) {
 function createMinorExam(verbList) {
     let listLength = verbList.length
     let form = document.createElement('form')
-
     for (let i = 0; i < WORDS_IN_PART; i++) {
-
         let row = document.createElement('div')
         row.classList.add('row')
-
         for (let j = 0; j < DICTIONARY_LIST.length; j++) {
-
             let col = document.createElement('div')
             col.classList.add('col-6', 'col-lg-3')
             let input = document.createElement('input')
