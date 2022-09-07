@@ -92,7 +92,7 @@ function createButtons(NAMES_BUTTONS) {
                     let counter = input.getAttribute('id')
                     let counterForm = counter.charAt(counter.length - 1)
                     let counterWord = counter.slice(0, counter.length - 1)
-                    if (input.value.trim() !== DICTIONARY_LIST[counterForm][counterWord]) {
+                    if (input.value.trim().toLocaleLowerCase() !== DICTIONARY_LIST[counterForm][counterWord]) {
                         if (!input.classList.contains('incorrect')) {
                             input.classList.add('incorrect')
                             input.setAttribute('placeholder', `${input.value.trim()} is incorrect, correct value = ${DICTIONARY_LIST[counterForm][counterWord]}`)
