@@ -123,7 +123,7 @@ function createForm(wordsPositions = []) {
         formRow.classList.add('form-row', 'form-group')
         for (let i = 0; i < DICTIONARY_LIST.length; i++) {
             let col = document.createElement('div')
-            col.classList.add('col-6')
+            col.classList.add('col-12', 'col-md-6')
             let input = document.createElement('input')
             input.setAttribute('type', 'text')
             input.classList.add('form-control')
