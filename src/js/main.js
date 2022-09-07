@@ -1,5 +1,5 @@
 "use strict"
-const WORDS_IN_PART = 2
+const WORDS_IN_PART = 1
 const TABLE_HEAD = ['#', 'base form', 'past simple', 'past participle']
 const BASE_FORM = ["beat", "become", "begin", "bend", "bet", "bite", "bleed", "blow", "break", "breed", "bring",
     "build", "burn", "buy", "catch", "choose", "come", "cost", "cut", "do", "dig", "draw", "dream", "drink", "drive",
@@ -37,8 +37,6 @@ const TRANSLATE = ["бити", "стати", "почати", "зігнути", "
     "красти", "палка", "жало", "сморід", "лаятись", "підмітати", "плавати", "гойдалка", "брати", "навчати", "рвати",
     "розповідати", "думаю", "кинути", "зрозуміти", "розбудити", "знос", "виграти", "писати"]
 const DICTIONARY_LIST = [TRANSLATE, BASE_FORM, PAST_SIMPLE, PAST_PARTICIPLE]
-const MAIN_TABLE_BUTTONS = ['learn', 'exam']
-const LEARN_BUTTONS = ['minor_test']
 const NAMES_BUTTONS = ['learn', 'exam', 'test', 'check']
 const BUTTONS = createButtons(NAMES_BUTTONS)
 
@@ -64,18 +62,14 @@ function createButtons(NAMES_BUTTONS) {
         if (elem.classList.contains('test')) {
             elem.innerText = 'test'
             elem.addEventListener('click', () => {
-                //drawTest('test click')
-                //console.log(verb_positions)
                 main_container.innerHTML = ''
                 let form = createForm(verb_positions)
                 main_container.appendChild(form)
                 main_container.appendChild(BUTTONS[3])
-                main_container.appendChild(BUTTONS[0])
             })
         } else if (elem.classList.contains('learn')) {
             elem.innerText = 'learn'
             elem.addEventListener('click', () => {
-                    //drawTest('learn click')
                     let container = document.getElementsByClassName('container')[0]
                     container.innerHTML = ''
                     verb_positions = makeWordPositionsList(BASE_FORM)
@@ -94,10 +88,13 @@ function createButtons(NAMES_BUTTONS) {
                     let counterForm = counter.charAt(counter.length - 1)
                     let counterWord = counter.slice(0, counter.length - 1)
                     if (input.value.trim().toLocaleLowerCase() !== DICTIONARY_LIST[counterForm][counterWord]) {
+                        input.setAttribute('placeholder', `${input.value.trim()} is incorrect, correct value = ${DICTIONARY_LIST[counterForm][counterWord]}`)
+                        input.value = ''
                         if (!input.classList.contains('incorrect')) {
                             input.classList.add('incorrect')
-                            input.setAttribute('placeholder', `${input.value.trim()} is incorrect, correct value = ${DICTIONARY_LIST[counterForm][counterWord]}`)
-                            input.value = ''
+                            if (!input.classList.contains('bg-success')) {
+                                input.classList.remove('bg-success')
+                            }
                         }
                     } else {
                         if (input.classList.contains('incorrect')) {
@@ -108,19 +105,20 @@ function createButtons(NAMES_BUTTONS) {
                             input.classList.add('bg-success')
                         }
                     }
-
                 })
-                data.forEach((elem)=> {
-                    if (elem.classList.contains('incorrect')) {
-                        console.log('incorect')
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].classList.contains('incorrect')) {
                         pass = false
-                        return;
+                        break;
                     } else {
                         pass = true
                     }
-                })
+                }
                 if (pass) {
                     alert('Great, get nex one')
+                    let buttonCheck = document.querySelector('.check')
+                    buttonCheck.remove()
+                    main_container.appendChild(BUTTONS[0])
                 } else {
                     alert('Wrong, write correct answers!')
                 }
@@ -159,11 +157,10 @@ function createForm(wordsPositions = []) {
             formRow.appendChild(col)
         }
         form.appendChild(formRow)
-        main_container.appendChild(BUTTONS[3])
+        //main_container.appendChild(BUTTONS[3])
     }
     return form
 }
-
 
 function createTableHead() {
     let thead = document.createElement('thead')
@@ -207,24 +204,6 @@ function drawTable(table, button) {
     main_container.appendChild(button)
 }
 
-function drawButtons(listButtonsName) {
-    let buttonsArr = []
-    if (Array.isArray(listButtonsName)) {
-        for (let i = 0; i < listButtonsName.length; i++) {
-            let button = document.createElement('div')
-            button.innerText = listButtonsName[i]
-            button.classList.add(listButtonsName[i], 'btn', "btn-primary", "mx-2")
-            buttonsArr.push(button)
-        }
-    } else {
-        let button = document.createElement('div')
-        button.innerText = listButtonsName
-        button.classList.add(listButtonsName.trim(), 'btn', "btn-primary", "mx-2")
-        buttonsArr.push(button)
-    }
-    return buttonsArr
-}
-
 function makeWordPositionsList(wordsArr) {
     let maxLength = wordsArr.length
     let positions = []
@@ -232,18 +211,6 @@ function makeWordPositionsList(wordsArr) {
         positions.push(Math.floor(Math.random() * maxLength))
     }
     return positions
-}
-
-function takeWordsByPosition(verbArr, positionsArr) {
-    let wordsArr = []
-    for (let k = 0; k < positionsArr.length; k++) {
-        let verbs = []
-        for (let j = 0; j < verbArr.length; j++) {
-            verbs.push(verbArr[j][positionsArr[k]])
-        }
-        wordsArr.push(verbs)
-    }
-    return wordsArr
 }
 
 function createTable(wordsPositions) {
@@ -255,38 +222,3 @@ function createTable(wordsPositions) {
     table.appendChild(tbody)
     return table
 }
-
-function createMinorExam(verbList) {
-    let listLength = verbList.length
-    let form = document.createElement('form')
-    for (let i = 0; i < WORDS_IN_PART; i++) {
-        let row = document.createElement('div')
-        row.classList.add('row')
-        for (let j = 0; j < DICTIONARY_LIST.length; j++) {
-            let col = document.createElement('div')
-            col.classList.add('col-6', 'col-lg-3')
-            let input = document.createElement('input')
-            input.classList.add('form-control')
-            if (j < 1) {
-                input.setAttribute('value', TRANSLATE[i])
-                input.setAttribute('disabled', '')
-            }
-            col.appendChild(input)
-            row.appendChild(col)
-        }
-    }
-    return form
-}
-
-
-function findButtons() {
-    let buttons = [...document.getElementsByClassName('btn')]
-    buttons.forEach((btn) => {
-    })
-}
-
-//need update
-function drawTest(value) {
-    console.log(value)
-}
-
