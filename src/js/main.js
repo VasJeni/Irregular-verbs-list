@@ -54,7 +54,6 @@ scrollButton.addEventListener('click',  () => {
     });
 });
 
-
 document.addEventListener('DOMContentLoaded', () => {
     drawTable(table, BUTTONS[0])
     main_container.appendChild(createForm(1))
@@ -90,7 +89,7 @@ function createButtons(NAMES_BUTTONS) {
         } else if (elem.classList.contains('check')) {
             elem.innerText = 'check'
             elem.addEventListener('click', () => {
-                let pass = false
+                let passed = false
                 let data = document.querySelectorAll('input')
                 data.forEach((input) => {
                     let counter = input.getAttribute('id')
@@ -117,13 +116,13 @@ function createButtons(NAMES_BUTTONS) {
                 })
                 for (let i = 0; i < data.length; i++) {
                     if (data[i].classList.contains('incorrect')) {
-                        pass = false
+                        passed = false
                         break;
                     } else {
-                        pass = true
+                        passed = true
                     }
                 }
-                if (pass) {
+                if (passed) {
                     alert('Great, get nex one')
                     let buttonCheck = document.querySelector('.check')
                     buttonCheck.remove()
@@ -156,10 +155,10 @@ function createForm(wordsPositions = []) {
                 input.setAttribute('placeholder', 'Base form')
             }
             if (i === 2) {
-                input.setAttribute('placeholder', 'past simple')
+                input.setAttribute('placeholder', 'Past simple')
             }
             if (i === 3) {
-                input.setAttribute('placeholder', 'past participle')
+                input.setAttribute('placeholder', 'Past participle')
             }
             input.setAttribute('id', String(wordsPositions[k]) + String(i))
             col.appendChild(input)
