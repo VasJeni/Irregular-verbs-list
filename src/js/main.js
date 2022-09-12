@@ -84,6 +84,11 @@ function createButtons(NAMES_BUTTONS) {
                     createTableBody(verb_positions)
                     let table = createTable(verb_positions)
                     drawTable(table, BUTTONS[2])
+                try {
+                    scrollButton.remove()
+                } catch (e) {
+                        return undefined
+                }
                 }
             )
         } else if (elem.classList.contains('check')) {
