@@ -44,7 +44,6 @@ let main_container = document.getElementsByClassName('container')[0]
 
 let table = createTable()
 let verb_positions = []
-
 let scrollButton = document.querySelector('svg')
 
 scrollButton.addEventListener('click',  () => {
