@@ -40,7 +40,7 @@ const DICTIONARY_LIST = [TRANSLATE, BASE_FORM, PAST_SIMPLE, PAST_PARTICIPLE]
 const NAMES_BUTTONS = ['learn', 'exam', 'test', 'check']
 const BUTTONS = createButtons(NAMES_BUTTONS)
 
-let main_container = document.getElementsByClassName('container')[0]
+let main_container = document.querySelector('.container')
 
 let table = createTable()
 let verb_positions = []
