@@ -1,4 +1,3 @@
-"use strict"
 const WORDS_IN_PART = 2
 const TABLE_HEAD = ['#', 'base form', 'past simple', 'past participle']
 const BASE_FORM = ["be", "beat", "become", "begin", "bend", "bet", "bite", "bleed", "blow", "break", "breed", "bring",
